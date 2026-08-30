@@ -1,0 +1,25 @@
+[package]
+name = "api-types"
+description = "Standard API response types for Rust — Success, Error, and List wrappers with OpenAPI derives and RFC 7807 Problem Details"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/WyattAu/api-types"
+readme = "README.md"
+
+[features]
+default = ["serde_impl"]
+serde_impl = ["dep:serde", "dep:serde_json"]
+axum = ["dep:axum"]
+openapi = ["dep:utoipa"]
+
+[dependencies]
+serde = { version = "1", features = ["derive"], optional = true }
+serde_json = { version = "1", optional = true }
+http = "1"
+axum = { version = "0.8", optional = true }
+utoipa = { version = "4", optional = true }
+
+[dev-dependencies]
+serde_json = "1"
