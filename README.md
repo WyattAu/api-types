@@ -13,6 +13,8 @@ Includes an RFC 7807 `ProblemDetail` type for structured error responses that co
 - **`ApiResponse<T>`** — wrapper for success and error responses
 - **`ApiError`** — structured error with code, message, and optional details
 - **`ApiListResponse<T>`** — paginated list response wrapper
+- **`PaginationMeta`** — pagination metadata for list endpoints
+- **`JSend<T>`** — strict [JSend](https://github.com/omniti-labs/jsend) envelope with `"status"` discriminator
 - **`ProblemDetail`** — RFC 7807 Problem Details for HTTP APIs
 - **Axum integration** — `IntoResponse` implementation behind the `axum` feature
 - **OpenAPI support** — optional `utoipa` derives behind the `openapi` feature
@@ -40,6 +42,28 @@ let error = ApiError::new("NOT_FOUND", "Resource not found");
 let resp = ApiResponse::<()>::error(error);
 let json = serde_json::to_string(&resp).unwrap();
 // {"success":false,"error":{"code":"NOT_FOUND","message":"Resource not found","details":null}}
+```
+
+### Paginated response
+
+```rust
+use api_types::{ApiResponse, PaginationMeta};
+
+let meta = PaginationMeta { page: 1, per_page: 20, total: 1000, total_pages: 50 };
+let resp = ApiResponse::paginated(items, meta);
+// {"success":true,"data":[...],"pagination":{"page":1,...}}
+```
+
+### Strict JSend envelope
+
+```rust
+use api_types::JSend;
+
+let resp = JSend::success("hello world");
+// {"status":"success","data":"hello world"}
+
+let err = JSend::<()>::error("Something went wrong");
+// {"status":"error","message":"Something went wrong"}
 ```
 
 ### RFC 7807 Problem Detail
@@ -86,6 +110,10 @@ struct ErrorBody { code: String, message: String }
 ```
 
 `api-types` gives you a single set of canonical types with proper derives, OpenAPI schema generation, and RFC 7807 compliance out of the box.
+
+## Relationship with `json-envelope`
+
+`api-types` absorbs the `json-envelope` crate: `PaginationMeta`, `ApiResponse::paginated`, `ApiResponse::error_with`, the `From<T>` conversion, the proptest suite, the criterion benches, and the fuzz target all live here now. `json-envelope` remains published as a thin re-export shim over `api-types` so existing users don't break; new code should depend on `api-types` directly.
 
 ## License
 

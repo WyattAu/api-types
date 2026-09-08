@@ -1,6 +1,10 @@
 use crate::ApiError;
 
 /// Standard API response wrapper for success and error cases.
+///
+/// Follows the JSend convention (`success` / `data` / `error`); see also
+/// [`JSend`](crate::JSend) for the strict `{"status": ...}` JSend spelling
+/// and [`ApiListResponse`] for paginated lists.
 #[derive(Debug, Clone)]
 #[cfg_attr(feature = "serde_impl", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
@@ -13,6 +17,27 @@ pub struct ApiResponse<T> {
     /// Error details. Present on failure, absent on success.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<ApiError>,
+    /// Pagination metadata. Present for list endpoints (see [`ApiResponse::paginated`]).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pagination: Option<PaginationMeta>,
+}
+
+/// Pagination metadata for list responses.
+///
+/// Merged from the `json-envelope` crate so `api-types` is the single
+/// envelope story.
+#[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde_impl", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
+pub struct PaginationMeta {
+    /// Current page number (1-indexed).
+    pub page: u32,
+    /// Number of items per page.
+    pub per_page: u32,
+    /// Total number of items across all pages.
+    pub total: u64,
+    /// Total number of pages.
+    pub total_pages: u32,
 }
 
 impl<T> ApiResponse<T> {
@@ -22,6 +47,17 @@ impl<T> ApiResponse<T> {
             success: true,
             data: Some(data),
             error: None,
+            pagination: None,
+        }
+    }
+
+    /// Creates a paginated success response with the given data and metadata.
+    pub fn paginated(data: T, meta: PaginationMeta) -> Self {
+        Self {
+            success: true,
+            data: Some(data),
+            error: None,
+            pagination: Some(meta),
         }
     }
 
@@ -31,7 +67,23 @@ impl<T> ApiResponse<T> {
             success: false,
             data: None,
             error: Some(error),
+            pagination: None,
         }
+    }
+
+    /// Creates an error response from a code and message.
+    ///
+    /// Shorthand for `ApiResponse::error(ApiError::new(code, message))`.
+    /// (Merged from the `json-envelope` crate, where this was `error`.)
+    pub fn error_with(code: impl Into<String>, message: impl Into<String>) -> Self {
+        Self::error(ApiError::new(code, message))
+    }
+}
+
+impl<T> From<T> for ApiResponse<T> {
+    /// Wraps data in a success response.
+    fn from(data: T) -> Self {
+        Self::success(data)
     }
 }
 
@@ -109,6 +161,38 @@ mod tests {
         assert!(!r.success);
         assert!(r.data.is_none());
         assert!(r.error.is_some());
+    }
+
+    #[test]
+    fn error_with_response() {
+        let r: ApiResponse<()> = ApiResponse::error_with("NOT_FOUND", "missing");
+        assert!(!r.success);
+        let err = r.error.unwrap();
+        assert_eq!(err.code, "NOT_FOUND");
+        assert_eq!(err.message, "missing");
+    }
+
+    #[test]
+    fn paginated_response() {
+        let meta = PaginationMeta {
+            page: 2,
+            per_page: 10,
+            total: 25,
+            total_pages: 3,
+        };
+        let r = ApiResponse::paginated(vec![1, 2], meta);
+        assert!(r.success);
+        assert_eq!(r.data.unwrap(), vec![1, 2]);
+        let meta = r.pagination.unwrap();
+        assert_eq!(meta.page, 2);
+        assert_eq!(meta.total_pages, 3);
+    }
+
+    #[test]
+    fn from_trait() {
+        let r: ApiResponse<String> = ApiResponse::from("hello".to_string());
+        assert!(r.success);
+        assert_eq!(r.data.as_deref(), Some("hello"));
     }
 
     #[test]
