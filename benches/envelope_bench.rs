@@ -1,3 +1,6 @@
+// Benchmarks run fixed inputs; unwrapping setup results is safe here.
+#![allow(clippy::unwrap_used)]
+
 use api_types::{ApiResponse, PaginationMeta};
 use criterion::{Criterion, criterion_group, criterion_main};
 

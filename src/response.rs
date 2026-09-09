@@ -12,13 +12,13 @@ pub struct ApiResponse<T> {
     /// Whether the request was successful.
     pub success: bool,
     /// The response data. Present on success, absent on error.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "serde_impl", serde(skip_serializing_if = "Option::is_none"))]
     pub data: Option<T>,
     /// Error details. Present on failure, absent on success.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "serde_impl", serde(skip_serializing_if = "Option::is_none"))]
     pub error: Option<ApiError>,
     /// Pagination metadata. Present for list endpoints (see [`ApiResponse::paginated`]).
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "serde_impl", serde(skip_serializing_if = "Option::is_none"))]
     pub pagination: Option<PaginationMeta>,
 }
 
@@ -95,22 +95,22 @@ pub struct ApiListResponse<T> {
     /// Whether the request was successful.
     pub success: bool,
     /// The list of items.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "serde_impl", serde(skip_serializing_if = "Option::is_none"))]
     pub data: Option<Vec<T>>,
     /// Current page number (1-indexed).
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "serde_impl", serde(skip_serializing_if = "Option::is_none"))]
     pub page: Option<u32>,
     /// Number of items per page.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "serde_impl", serde(skip_serializing_if = "Option::is_none"))]
     pub per_page: Option<u32>,
     /// Total number of items across all pages.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "serde_impl", serde(skip_serializing_if = "Option::is_none"))]
     pub total: Option<u64>,
     /// Total number of pages.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "serde_impl", serde(skip_serializing_if = "Option::is_none"))]
     pub total_pages: Option<u64>,
     /// Error details. Present on failure.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "serde_impl", serde(skip_serializing_if = "Option::is_none"))]
     pub error: Option<ApiError>,
 }
 
@@ -144,6 +144,7 @@ impl<T> ApiListResponse<T> {
 
 #[cfg(test)]
 mod tests {
+    #![allow(clippy::unwrap_used)] // test assertions unwrap by design
     use super::*;
 
     #[test]

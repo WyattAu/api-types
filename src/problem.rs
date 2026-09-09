@@ -6,18 +6,18 @@
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
 pub struct ProblemDetail {
     /// URI reference identifying the problem type.
-    #[serde(rename = "type")]
+    #[cfg_attr(feature = "serde_impl", serde(rename = "type"))]
     pub problem_type: String,
     /// Short human-readable summary.
     pub title: String,
     /// HTTP status code.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "serde_impl", serde(skip_serializing_if = "Option::is_none"))]
     pub status: Option<u16>,
     /// Human-readable explanation specific to this occurrence.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "serde_impl", serde(skip_serializing_if = "Option::is_none"))]
     pub detail: Option<String>,
     /// URI reference identifying the specific occurrence.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "serde_impl", serde(skip_serializing_if = "Option::is_none"))]
     pub instance: Option<String>,
 }
 
@@ -89,6 +89,7 @@ impl std::error::Error for ProblemDetail {}
 
 #[cfg(test)]
 mod tests {
+    #![allow(clippy::unwrap_used)] // test assertions unwrap by design
     use super::*;
 
     #[test]

@@ -10,6 +10,7 @@ pub struct ApiError {
     /// Human-readable error message.
     pub message: String,
     /// Optional additional details about the error.
+    #[cfg(feature = "serde_impl")]
     pub details: Option<serde_json::Value>,
 }
 
@@ -19,11 +20,13 @@ impl ApiError {
         Self {
             code: code.into(),
             message: message.into(),
+            #[cfg(feature = "serde_impl")]
             details: None,
         }
     }
 
     /// Attaches additional details to the error.
+    #[cfg(feature = "serde_impl")]
     pub fn with_details(mut self, details: serde_json::Value) -> Self {
         self.details = Some(details);
         self
@@ -75,6 +78,7 @@ mod tests {
         assert!(e.details.is_none());
     }
 
+    #[cfg(feature = "serde_impl")]
     #[test]
     fn with_details() {
         let e =

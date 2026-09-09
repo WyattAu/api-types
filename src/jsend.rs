@@ -17,18 +17,21 @@ use crate::{ApiError, ApiResponse};
 #[derive(Debug, Clone)]
 #[cfg_attr(feature = "serde_impl", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
-#[cfg_attr(feature = "serde_impl", serde(tag = "status", rename_all = "lowercase"))]
+#[cfg_attr(
+    feature = "serde_impl",
+    serde(tag = "status", rename_all = "lowercase")
+)]
 pub enum JSend<T> {
     /// The request succeeded. `data` holds the result.
     Success {
         /// The response payload.
-        #[serde(skip_serializing_if = "Option::is_none")]
+        #[cfg_attr(feature = "serde_impl", serde(skip_serializing_if = "Option::is_none"))]
         data: Option<T>,
     },
     /// The request failed (client error). `data` describes what was wrong.
     Fail {
         /// Details about the failure (e.g. validation errors).
-        #[serde(skip_serializing_if = "Option::is_none")]
+        #[cfg_attr(feature = "serde_impl", serde(skip_serializing_if = "Option::is_none"))]
         data: Option<T>,
     },
     /// The request errored (server error).
@@ -36,10 +39,10 @@ pub enum JSend<T> {
         /// Human-readable error message (required by JSend).
         message: String,
         /// Optional numeric error code.
-        #[serde(skip_serializing_if = "Option::is_none")]
+        #[cfg_attr(feature = "serde_impl", serde(skip_serializing_if = "Option::is_none"))]
         code: Option<i32>,
         /// Optional payload.
-        #[serde(skip_serializing_if = "Option::is_none")]
+        #[cfg_attr(feature = "serde_impl", serde(skip_serializing_if = "Option::is_none"))]
         data: Option<T>,
     },
 }
@@ -112,6 +115,7 @@ impl From<ApiError> for JSend<()> {
 
 #[cfg(test)]
 mod tests {
+    #![allow(clippy::unwrap_used)] // test assertions unwrap by design
     use super::*;
 
     #[test]
@@ -120,7 +124,13 @@ mod tests {
         assert!(!JSend::fail(1).is_success());
         assert!(!JSend::<()>::error("boom").is_success());
         let coded = JSend::<()>::error_with_code("boom", 500);
-        assert!(matches!(coded, JSend::Error { code: Some(500), .. }));
+        assert!(matches!(
+            coded,
+            JSend::Error {
+                code: Some(500),
+                ..
+            }
+        ));
     }
 
     #[test]
@@ -161,7 +171,13 @@ mod tests {
         assert_eq!(json["code"], serde_json::json!(500));
 
         let back: JSend<i32> = serde_json::from_value(json).unwrap();
-        assert!(matches!(back, JSend::Error { code: Some(500), .. }));
+        assert!(matches!(
+            back,
+            JSend::Error {
+                code: Some(500),
+                ..
+            }
+        ));
     }
 
     #[cfg(feature = "serde_impl")]

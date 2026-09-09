@@ -1,3 +1,6 @@
+// Tests exercise serialization directly; unwrapping keeps assertions readable.
+#![allow(clippy::unwrap_used)]
+
 //! Property-based tests for the api-types envelope.
 //!
 //! Merged from the `json-envelope` crate's suite (adapted to the merged API:
