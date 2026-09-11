@@ -125,6 +125,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(feature = "serde_impl")]
     fn serialize_skips_none_fields() {
         let p = ProblemDetail::new("about:blank").with_title("Oops");
         let json = serde_json::to_value(&p).unwrap();

@@ -1,5 +1,6 @@
 // Tests exercise serialization directly; unwrapping keeps assertions readable.
 #![allow(clippy::unwrap_used)]
+#![cfg(feature = "serde_impl")]
 
 //! Property-based tests for the api-types envelope.
 //!

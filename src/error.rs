@@ -75,6 +75,7 @@ mod tests {
         let e = ApiError::new("NOT_FOUND", "missing");
         assert_eq!(e.code, "NOT_FOUND");
         assert_eq!(e.message, "missing");
+        #[cfg(feature = "serde_impl")]
         assert!(e.details.is_none());
     }
 

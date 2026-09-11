@@ -5,6 +5,14 @@ Changelog](https://keepachangelog.com/) — versions follow [semver](https://sem
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-09-11
+
+### Fixed
+
+- 22-gate quality audit pass: documentation completeness
+  (README badges, REQUIREMENTS/THREAT-MODEL coverage) and
+  feature-gated test hygiene.
+
 ### Added
 - Merged `json-envelope` into `api-types`: `PaginationMeta`, `ApiResponse::paginated`,
   `ApiResponse::error_with`, `From<T> for ApiResponse<T>`, the proptest suite, the

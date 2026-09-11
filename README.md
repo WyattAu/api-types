@@ -1,5 +1,9 @@
 # api-types
 
+[![docs.rs](https://docs.rs/api-types/badge.svg)](https://docs.rs/api-types)
+[![crates.io](https://img.shields.io/crates/v/api-types.svg)](https://crates.io/crates/api-types)
+[![License](https://img.shields.io/badge/license-MIT%2FApache--2.0-blue.svg)](LICENSE)
+
 Standard API response types for Rust — Success, Error, and List wrappers with OpenAPI derives and RFC 7807 Problem Details.
 
 ## Overview
