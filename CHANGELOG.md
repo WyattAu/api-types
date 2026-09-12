@@ -5,6 +5,17 @@ Changelog](https://keepachangelog.com/) — versions follow [semver](https://sem
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-09-12
+
+### Added
+
+- `tests/config_matrix.rs`: config-knob behavior matrix proving every
+  builder setter (`ApiError::with_details`, `ProblemDetail::with_title` /
+  `with_status` / `with_detail` / `with_instance`) observably changes the
+  serialized wire output (default vs configured), plus a full
+  error-code → HTTP-status mapping table. Part of the estate-wide
+  dead-config-knob sweep (breaker `sliding_window_size` incident class).
+
 ## [0.1.0] - 2026-09-11
 
 ### Fixed
