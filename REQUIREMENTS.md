@@ -1,9 +1,9 @@
-# Requirements — api-types
+# Requirements: api-types
 
 Numbered, testable requirements. Every requirement maps to at least one named
 test or doc-comment contract; security-relevant items cite threat-model rows.
 
-Scope: Shared API envelope types (`api-types`) — `ApiResponse`, JSend, `ApiListResponse`, RFC 7807 `ProblemDetail`
+Scope: Shared API envelope types (`api-types`); `ApiResponse`, JSend, `ApiListResponse`, RFC 7807 `ProblemDetail`
 
 ## Functional
 

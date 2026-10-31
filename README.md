@@ -5,7 +5,7 @@
 [![crates.io](https://img.shields.io/crates/v/api-types.svg)](https://crates.io/crates/api-types)
 [![License](https://img.shields.io/badge/license-MIT%2FApache--2.0-blue.svg)](LICENSE)
 
-Standard API response types for Rust — Success, Error, and List wrappers with OpenAPI derives and RFC 7807 Problem Details.
+Standard API response types for Rust; Success, Error, and List wrappers with OpenAPI derives and RFC 7807 Problem Details.
 
 ## Overview
 
@@ -15,16 +15,16 @@ Includes an RFC 7807 `ProblemDetail` type for structured error responses that co
 
 ## Features
 
-- **`ApiResponse<T>`** — wrapper for success and error responses
-- **`ApiError`** — structured error with code, message, and optional details
-- **`ApiListResponse<T>`** — paginated list response wrapper
-- **`PaginationMeta`** — pagination metadata for list endpoints
-- **`JSend<T>`** — strict [JSend](https://github.com/omniti-labs/jsend) envelope with `"status"` discriminator
-- **`ProblemDetail`** — RFC 7807 Problem Details for HTTP APIs
-- **Axum integration** — `IntoResponse` implementation behind the `axum` feature
-- **OpenAPI support** — optional `utoipa` derives behind the `openapi` feature
-- **Serde support** — serialization/deserialization behind `serde_impl` (default)
-- **No `unsafe`** — `#![forbid(unsafe_code)]`
+- **`ApiResponse<T>`**; wrapper for success and error responses
+- **`ApiError`**; structured error with code, message, and optional details
+- **`ApiListResponse<T>`**; paginated list response wrapper
+- **`PaginationMeta`**; pagination metadata for list endpoints
+- **`JSend<T>`**; strict [JSend](https://github.com/omniti-labs/jsend) envelope with `"status"` discriminator
+- **`ProblemDetail`**; RFC 7807 Problem Details for HTTP APIs
+- **Axum integration**; `IntoResponse` implementation behind the `axum` feature
+- **OpenAPI support**; optional `utoipa` derives behind the `openapi` feature
+- **Serde support**; serialization/deserialization behind `serde_impl` (default)
+- **No `unsafe`**; `#![forbid(unsafe_code)]`
 
 ## Usage
 
@@ -103,7 +103,7 @@ async fn not_found() -> Json<ApiResponse<()>> {
 Without `api-types`, every endpoint needs ad-hoc structs:
 
 ```rust
-// Manual — repetitive, inconsistent across services
+// Manual; repetitive, inconsistent across services
 #[derive(Serialize)]
 struct SuccessResponse<T> { success: bool, data: T }
 

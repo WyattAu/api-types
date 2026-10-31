@@ -1,11 +1,11 @@
-# Threat Model — api-types
+# Threat Model: api-types
 
 Reference: STRIDE. Scope: the crate's public API surface. Trust boundary:
 (1) bytes/inputs entering public constructors and parsers, (2) concurrent
-callers sharing interior state. api-types is an in-process library — it opens
+callers sharing interior state. api-types is an in-process library; it opens
 no sockets and inherits the embedding process's trust domain.
 
-Purpose: Shared API envelope types (`api-types`) — `ApiResponse`, JSend, `ApiListResponse`, RFC 7807 `ProblemDetail`
+Purpose: Shared API envelope types (`api-types`); `ApiResponse`, JSend, `ApiListResponse`, RFC 7807 `ProblemDetail`
 
 ## Assets
 
